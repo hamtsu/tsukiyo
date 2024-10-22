@@ -9,6 +9,7 @@ local InputController = Knit.CreateController { Name = "InputController" }
 InputController.inputType = "KEYBOARD" -- KEYBOARD, GAMEPAD
 InputController.moveDirection = nil -- FORWARD, BACKWARD, LEFT, RIGHT, FORWARD_LEFT, FORWARD_RIGHT, BACKWARD_LEFT, BACKWARD_RIGHT
 InputController.moveDirectionChanged = Signal.new()
+InputController.movementStopped = Signal.new()
 
 ------ PRIVATE METHODS ------
 
@@ -29,6 +30,15 @@ local function onInputBegan(input, _gameProcessed)
         elseif input.KeyCode == Enum.KeyCode.D then
             InputController.moveDirection = "RIGHT"
             InputController.moveDirectionChanged:Fire()
+        end
+    end
+end
+
+local function onInputEnded(input, _gameProcessed)
+    if input.UserInputType == Enum.UserInputType.Keyboard then
+        if input.KeyCode == Enum.KeyCode.W or input.KeyCode == Enum.KeyCode.A or input.KeyCode == Enum.KeyCode.S or input.KeyCode == Enum.KeyCode.D then
+            InputController.movementStopped:Fire(InputController.moveDirection)
+            InputController.moveDirection = nil
         end
     end
 end
@@ -75,6 +85,7 @@ end
 
 function InputController:KnitInit()
     UserInputService.InputBegan:Connect(onInputBegan)
+    UserInputService.InputEnded:Connect(onInputEnded)
     UserInputService.InputChanged:Connect(onInputChanged)
     print("InputController initialized")
 end

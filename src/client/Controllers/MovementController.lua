@@ -22,6 +22,12 @@ local function onMoveDirectionChange()
     end
 end
 
+local function onMovementStopped(lastMoveDirection)
+    if lastMoveDirection == "FORWARD" then
+        AnimationController:Stop("FemWalking")
+    end
+end
+
 ------ LIFECYCLE METHODS ------
 
 function MovementController:KnitInit()
@@ -34,6 +40,7 @@ function MovementController:KnitStart()
 	AnimationController = Knit.GetController("AnimationController")
 
     InputController.moveDirectionChanged:Connect(onMoveDirectionChange)
+    InputController.movementStopped:Connect(onMovementStopped)
     print("MovementController started")
 end
 
