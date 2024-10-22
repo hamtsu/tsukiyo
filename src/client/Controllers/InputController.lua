@@ -1,10 +1,16 @@
 local UserInputService = game:GetService("UserInputService")
 local Knit = require(game:GetService("ReplicatedStorage").Packages.knit)
+local Signal = require(game:GetService("ReplicatedStorage").Packages.Signal)
 
 local InputController = Knit.CreateController { Name = "InputController" }
 
+------ CONTROLLER VARIABLES ------
+
 InputController.inputType = "KEYBOARD" -- KEYBOARD, GAMEPAD
 InputController.moveDirection = nil -- FORWARD, BACKWARD, LEFT, RIGHT, FORWARD_LEFT, FORWARD_RIGHT, BACKWARD_LEFT, BACKWARD_RIGHT
+InputController.moveDirectionChanged = Signal.new()
+
+------ PRIVATE METHODS ------
 
 local function onInputBegan(input, _gameProcessed)
     if input.UserInputType == Enum.UserInputType.Keyboard then
@@ -13,16 +19,21 @@ local function onInputBegan(input, _gameProcessed)
         -- MOVEMENT
         if input.KeyCode == Enum.KeyCode.W then
             InputController.moveDirection = "FORWARD"
+            InputController.moveDirectionChanged:Fire()
         elseif input.KeyCode == Enum.KeyCode.A then
             InputController.moveDirection = "LEFT"
+            InputController.moveDirectionChanged:Fire()
         elseif input.KeyCode == Enum.KeyCode.S then
             InputController.moveDirection = "BACKWARD"
+            InputController.moveDirectionChanged:Fire()
         elseif input.KeyCode == Enum.KeyCode.D then
             InputController.moveDirection = "RIGHT"
+            InputController.moveDirectionChanged:Fire()
         end
     end
 end
 
+-- Controller inputs
 local function onInputChanged(input, _gameProcessed)
     if input.UserInputType == Enum.UserInputType.Gamepad1 then
         InputController.inputType = "GAMEPAD"
@@ -59,6 +70,8 @@ local function onInputChanged(input, _gameProcessed)
         print(InputController.moveDirection)
     end
 end
+
+------ LIFECYCLE METHODS ------
 
 function InputController:KnitInit()
     UserInputService.InputBegan:Connect(onInputBegan)
