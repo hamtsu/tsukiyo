@@ -11,20 +11,26 @@ local function onMoveDirectionChange()
     local moveDirection = InputController.moveDirection
 
     if moveDirection == "FORWARD" then
-        AnimationController:Play("FemWalking")
+        AnimationController:Play("FemWalk")
         AnimationController:ListCurrentAnimations()
     elseif moveDirection == "BACKWARD" then
-        print("Moving backward")
+        AnimationController:Play("FemWalk", true)
     elseif moveDirection == "LEFT" then
-        print("Moving left")
+        AnimationController:Play("FemWalkLeft")
     elseif moveDirection == "RIGHT" then
-        print("Moving right")
+        AnimationController:Play("FemWalkRight")
     end
 end
 
 local function onMovementStopped(lastMoveDirection)
     if lastMoveDirection == "FORWARD" then
-        AnimationController:Stop("FemWalking")
+        AnimationController:Stop("FemWalk")
+    elseif lastMoveDirection == "LEFT" then
+        AnimationController:Stop("FemWalkLeft")
+    elseif lastMoveDirection == "RIGHT" then
+        AnimationController:Stop("FemWalkRight")
+    elseif lastMoveDirection == "BACKWARD" then
+        AnimationController:Stop("FemWalk")
     end
 end
 
@@ -41,6 +47,8 @@ function MovementController:KnitStart()
 
     InputController.moveDirectionChanged:Connect(onMoveDirectionChange)
     InputController.movementStopped:Connect(onMovementStopped)
+
+    AnimationController:Play("FemIdle")
     print("MovementController started")
 end
 

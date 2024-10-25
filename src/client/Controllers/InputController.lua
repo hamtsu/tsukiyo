@@ -36,7 +36,7 @@ end
 
 local function onInputEnded(input, _gameProcessed)
     if input.UserInputType == Enum.UserInputType.Keyboard then
-        if input.KeyCode == Enum.KeyCode.W or input.KeyCode == Enum.KeyCode.A or input.KeyCode == Enum.KeyCode.S or input.KeyCode == Enum.KeyCode.D then
+        if input.KeyCode == Enum.KeyCode.W or input.KeyCode == Enum.KeyCode.A or input.KeyCode == Enum.KeyCode.S or input.KeyCode == Enum.KeyCode.D or input.KeyCode == Enum.KeyCode.Thumbstick1 then
             InputController.movementStopped:Fire(InputController.moveDirection)
             InputController.moveDirection = nil
         end
